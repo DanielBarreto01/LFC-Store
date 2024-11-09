@@ -5,16 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
@@ -25,24 +27,27 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.composedices.model.sampleProductList
 import com.example.composedices.ui.theme.BackgroundColor
 import com.example.composedices.ui.theme.ColorTitle
+import com.example.composedices.ui.theme.colorFilter
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-fun ProductListScreen() {
+fun ProductListScreen(navController: NavController) {
     Column {
-        // Barra de título con "Home Kit"
         TopAppBar(
             title = {
                 Row {
                     IconButton(onClick = { /* TODO: Acción de retroceso */ }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Retroceder", tint = ColorTitle)
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "Retroceder",
+                            tint = ColorTitle
+                        )
                     }
                     Text("Home Kit", modifier = Modifier.padding(top = 8.dp, start = 0.dp))
                 }
@@ -55,7 +60,11 @@ fun ProductListScreen() {
                     Icon(Icons.Default.Search, contentDescription = "Buscar", tint = ColorTitle)
                 }
                 IconButton(onClick = { /* TODO: Acción de carrito */ }) {
-                    Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito", tint = ColorTitle)
+                    Icon(
+                        Icons.Default.ShoppingCart,
+                        contentDescription = "Carrito",
+                        tint = ColorTitle
+                    )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -69,11 +78,21 @@ fun ProductListScreen() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TextButton(onClick = { /* TODO: Acción ordenar */ }) {
-                Text("POSITION")
+            TextButton(
+                onClick = { /* TODO: Acción ordenar */ },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.Menu, contentDescription = "Ordenar", tint = colorFilter)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("POSITION", color = colorFilter)
             }
-            TextButton(onClick = { /* TODO: Acción filtrar */ }) {
-                Text("FILTER")
+            TextButton(
+                onClick = { /* TODO: Acción filtrar */ },
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(Icons.Default.List, contentDescription = "Filtrar", tint = colorFilter)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("FILTER", color = colorFilter)
             }
         }
         // Texto centrado en otra fila
@@ -83,7 +102,8 @@ fun ProductListScreen() {
                 .padding(top = 8.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "16 items found")
+            val productList = sampleProductList
+            Text(text = "${productList.size} items found", fontSize = 12.sp)
         }
 
         // Lista de productos en LazyVerticalGrid
@@ -94,7 +114,7 @@ fun ProductListScreen() {
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(sampleProductList) { product ->
-                ProductItem(product)
+                ProductItem(product, navController)
             }
         }
     }
